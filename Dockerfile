@@ -22,6 +22,9 @@ WORKDIR /var/www/html
 # Copy app source code
 COPY . .
 
+# Copy custom Apache configuration
+COPY ./000-default.conf /etc/apache2/sites-available/000-default.conf
+
 # Install Laravel dependencies
 RUN composer install --no-interaction --prefer-dist
 
@@ -30,6 +33,9 @@ RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Set permissions (optional, based on your needs)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Suppress Apache ServerName warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Expose port 80
 EXPOSE 80
